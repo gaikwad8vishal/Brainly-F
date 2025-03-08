@@ -21,14 +21,13 @@ model User {
 }
 
 model Content {
-  id        String   @id @default(uuid())
-  title     String
-  about     String
-  embedCode String
-  user      User     @relation(fields: [userId], references: [id])
-  userId    String
-  Documents String
-  Link String
-  Other String
-  createdAt DateTime @default(now())
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  title       String
+  description String?
+  embedCode   String?  // Twitter/YouTube embeds
+  link        String?  // External links
+  documentUrl String?  // Uploaded document URL
+  createdAt   DateTime @default(now())
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

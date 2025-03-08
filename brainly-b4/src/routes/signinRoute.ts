@@ -1,10 +1,9 @@
 import express from "express";
-
-import { Signin } from "../controllers/signinCorntroller";
+import { signin } from "../controllers/signinCorntroller";
 
 const router = express.Router();
 
-
-router.post("/signin", Signin );
+//@ts-ignore
+router.post("/signin", signin );
 
 export default router;

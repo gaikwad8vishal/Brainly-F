@@ -1,14 +1,21 @@
-
-
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import prisma from "../models/User";
 
+
+
+//@ts-ignore
+
 export const Signup =  async (req:Request, res:Response) => {
-    const { username, password } = req.body;
+    const { 
+        username, 
+        password 
+    } = req.body;
   
     if (!username || !password) {
-      return res.status(400).json({ error: "Username and password are required" });
+      return res.status(400).json({ 
+        error: "Username and password are required" 
+    });
     }
   
     try {
@@ -20,11 +27,17 @@ export const Signup =  async (req:Request, res:Response) => {
         data: { username, password: hashedPassword },
       });
   
-      res.json({ message: "User registered", user });
+      res.json({ 
+        message: "User registered", user 
+    });
     } catch (error) {
       if ((error as any).code === "P2002") {
-        return res.status(400).json({ error: "Username already taken" });
+        return res.status(400).json({ 
+            error: "Username already taken" 
+        });
       }
-      res.status(500).json({ error: "Something went wrong" });
+      res.status(500).json({ 
+        error: "Something went wrong" 
+    });
     }
   }  
