@@ -17,7 +17,7 @@ model User {
   id       String  @id @default(uuid())
   username String  @unique
   password String
-  contents Note[]
+  notes Note[]
 }
 
 model Note {

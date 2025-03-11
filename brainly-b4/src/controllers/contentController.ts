@@ -12,7 +12,7 @@ export const addContent = async (req: Request, res: Response) => {
       return res.status(401).json({ error: "Unauthorized" });
     }
 
-    const newContent = await prisma.content.create({
+    const newContent = await prisma.note.create({
       data: {
         title,
         description,
