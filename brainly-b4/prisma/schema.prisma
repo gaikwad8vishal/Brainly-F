@@ -17,17 +17,15 @@ model User {
   id       String  @id @default(uuid())
   username String  @unique
   password String
-  contents Content[]
+  contents Note[]
 }
 
-model Content {
-  id          String   @id @default(uuid())
-  userId      String   @map("user_id")
+model Note {
+  id          String  @id @default(uuid()) // Unique ID
   title       String
   description String?
-  embedCode   String?  // Twitter/YouTube embeds
-  link        String?  // External links
-  documentUrl String?  // Uploaded document URL
-  createdAt   DateTime @default(now())
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  embedCode   String?
+  link        String
+  userId      String  // Connected to User
+  user        User    @relation(fields: [userId], references: [id])
 }
