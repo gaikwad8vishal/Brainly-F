@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react";
+import { ReactElement, useState, useEffect } from "react";
 import { MenuIcon } from "../Icons/menuIcon";
 import { AllNotes } from "../Icons/AllNote";
 import { TweetIcon } from "../Icons/TweetsIcon";
@@ -6,19 +6,14 @@ import { YoutubeIcon } from "../Icons/YoutubIcon";
 import { DocumentIcon } from "../Icons/DocumentsIcon";
 import { LinkIcon } from "../Icons/LinkIcon";
 import { OtherIcon } from "../Icons/OthefileIcon";
-import {  ShapesIcon, Turtle, X } from "lucide-react";
 import { CrossIcon } from "../Icons/CrossIcon";
 import { BrainIcon } from "../Icons/BrainIcon";
-import { Button1, Button2 } from "../Components/Button";
-import { AddContentCard } from "../Components/AddContenCard";
 import axios from "axios";
 import { BarContent, Nav } from "../Components/Nav";
-import NotesApp from "../Components/CardComponent";
 import { ShareIcon } from "../Icons/ShareIcon";
-import { DeleteIcon } from "../Icons/DeleteIcon";
-import { v4 as uuid } from "uuid";
-import { Link } from "react-router-dom";
+import { DeleteIcon } from "../Icons/DeleteIcon"
 
+ 
 
 
 
@@ -33,45 +28,67 @@ export function Dashboard(){
     const [deleteId, setDeleteId] = useState<number | null>(null);
     const [copiedId, setCopiedId] = useState<number | null>(null);
 
+ 
+
 
 
     const handleChange = (e:any) => {
       setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-  
-    const handleSubmit = (e:any) => {
-      e.preventDefault();
-      if (!formData.title.trim() || !formData.link.trim()) return;
-      const embedCode = generateEmbedCode(formData.link); // Convert youtub's and twitttter's link to embed singh
+
+
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
+        if (!formData.title.trim() || !formData.link.trim()) return;
         
-      if (formData.title.length > 18) {
-        alert("Title should be a maximum of 15 characters!");
-        return;
-      }
-      const newNote = {
-        id: Date.now(), // Unique ID
-        title:formData.title,
-        description: formData.description.trim(),
-        link:formData.link,
-        embedCode,
-      };
-
-
-      setNotes([...notes, newNote]); // Store notes
-      setFormData({ title: "", description: "", link: "" }); // Reset form
-      setShowModal(false); // Close modal
-    };
-
-
-    const handleDelete = (id: number) => {
-
-        const confirmDelete = window.confirm("Are you sure you want to delete this note?");
-        if (!confirmDelete) return;
+        const embedCode = generateEmbedCode(formData.link); // Convert to embed code
       
-        const updatedNotes = notes.filter((note) => note.id !== id); // Remove only the clicked note
-        setNotes(updatedNotes);
+        if (formData.title.length > 18) {
+          alert("Title should be a maximum of 15 characters!");
+          return;
+        }
+      
+        const newNote = {
+          title: formData.title,
+          description: formData.description.trim(),
+          link: formData.link,
+          embedCode,
+        };
+      
+        try {
+          const response = await axios.post("http://localhost:3000/content/add", newNote, {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`, // Make sure user is authenticated
+            },
+          });
+      
+          //@ts-ignore
+          setNotes([...notes, response.data]); // Update state with newly saved note
+          setFormData({ title: "", description: "", link: "" }); // Reset form
+          setShowModal(false); // Close modal
+        } catch (error) {
+          console.error("Error adding note:", error);
+        }
       };
+      
 
+      const handleDelete = async (id: number) => {
+        console.log("hi there")
+        try {
+          const response = await fetch(`http://localhost:3000/content/${id}`, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`, // Replace with actual token
+            },
+          });
+      
+          const data = await response.json();
+          console.log(data.message);
+        } catch (error) {
+          console.error("Error deleting content:", error);
+        }
+      };
 
       const handleShare = (id: number, link: string) => {
         navigator.clipboard.writeText(link); // ✅ Copy to clipboard

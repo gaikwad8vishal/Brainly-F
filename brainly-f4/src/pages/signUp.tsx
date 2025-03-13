@@ -15,11 +15,11 @@ const SignupForm = ():JSX.Element => {
     setMessage(""); // Clear previous messages
 
     try {
-      const response = await axios.post("http://localhost:3000/signup", {
+      const response = await axios.post("http://localhost:3000/api/signup", {
         username,
         password,
       });
-
+      //@ts-ignore
       setMessage(response.data.message);
       setUsername("");
       setPassword("");

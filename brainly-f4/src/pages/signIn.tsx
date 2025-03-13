@@ -18,12 +18,14 @@ const SigninForm = () => {
     setMessage(""); // Clear previous messages
 
     try {
-      const response = await axios.post("http://localhost:3000/signin", {
+      const response = await axios.post("http://localhost:3000/api/signin", {
         username,
         password,
       });
-
+      //@ts-ignore
       setMessage(response.data.message);
+      //@ts-ignore
+
       localStorage.setItem("token", response.data.token);
       navigate("/dashboard"); // Store JWT token
       setUsername("");
