@@ -28,3 +28,45 @@ export const addContent = async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
+
+
+
+
+export const deleteContent = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params; // ID frontend se milega
+    const userId = (req as any).userId; // Auth middleware se userId lena
+    
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    
+
+    const content = await prisma.note.findUnique({
+      //@ts-ignore
+
+      where: { id: parseInt(id) },
+    });
+   
+    if (!content) {
+      return res.status(404).json({ error: "Content not found" });
+    }
+
+
+    if (content.userId !== userId) {
+      return res.status(403).json({ error: "Forbidden: Not your content" });
+    }
+   
+    await prisma.note.delete({
+      //@ts-ignore
+      where: { id: parseInt(id) },
+    });
+
+    res.json({ message: "Content deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting content:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
