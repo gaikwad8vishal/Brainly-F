@@ -7,11 +7,10 @@ const router = express.Router();
 
 //@ts-ignore
 
-// ✅ **Get Only Authenticated User’s Notes**
+//Get Only Authenticated User’s Notes
 router.get("/", authenticateUser, async (req: any, res) => {
   try {
     //@ts-ignore
-
     const notes = await prisma.note.findMany({
       where: { userId: req.userId }, // Sirf wahi user apne notes dekh sakta hai
     });
@@ -22,14 +21,13 @@ router.get("/", authenticateUser, async (req: any, res) => {
 });
 //@ts-ignore
 
-// ✅ **Create Note (Authenticated Users Only)**
+// Create Note for Authenticated Users Only
 router.post("/", authenticateUser, async (req: any, res) => {
   const { title, description, link, embedCode } = req.body;
 //@ts-ignore
 
   try {
     //@ts-ignore
-
     const note = await prisma.note.create({
       data: { title, description, link, embedCode, userId: req.userId },
     });
