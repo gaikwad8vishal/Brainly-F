@@ -29,7 +29,23 @@ export function Dashboard(){
     const [copiedId, setCopiedId] = useState<number | null>(null);
 
  
+    useEffect(() => {
+      fetchUserContent();
+    }, []);
 
+    const fetchUserContent = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/content/all-content", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        //@ts-ignore
+        setNotes(response.data);
+      } catch (error) {
+        console.error("Error fetching user content:", error);
+      }
+    };
 
 
     const handleChange = (e:any) => {
@@ -71,30 +87,33 @@ export function Dashboard(){
         }
       };
       
-
-      const handleDelete = async (id: number) => {
-        console.log("hi there")
+      const handleDelete = async (id: string) => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this content?");
+        if (!confirmDelete) return;
+    
         try {
-          const response = await fetch(`http://localhost:3000/content/${id}`, {
-            method: "DELETE",
+          await axios.delete(`http://localhost:3000/content/delete/${id}`, {
             headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // Replace with actual token
+              Authorization: `Bearer ${localStorage.getItem("token")}`, 
             },
           });
-      
-          const data = await response.json();
-          console.log(data.message);
+    
+    
+          // Remove from frontend state
+          setNotes((prevNotes) => prevNotes.filter((note) => note.id !== id));
+          alert("Content deleted successfully!");
         } catch (error) {
           console.error("Error deleting content:", error);
+          alert("Failed to delete content!");
         }
-      };
+    };
+    
 
       const handleShare = (id: number, link: string) => {
-        navigator.clipboard.writeText(link); // ✅ Copy to clipboard
-        setCopiedId(id); // ✅ Show "Copied!" message
+        navigator.clipboard.writeText(link); // Copy to clipboard
+        setCopiedId(id); // Show "Copied!" message
       
-        setTimeout(() => setCopiedId(null), 2000); // ✅ Hide after 2s
+        setTimeout(() => setCopiedId(null), 2000); // gayab after 2s
       };
   
     // Convert link to embed code
