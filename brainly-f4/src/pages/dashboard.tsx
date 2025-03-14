@@ -25,8 +25,8 @@ export function Dashboard(){
     const [notes, setNotes] = useState([]);
     const [formData, setFormData] = useState({ title: "", description: "", link: "" });
     const [showModal, setShowModal] = useState(false);
-    const [deleteId, setDeleteId] = useState<number | null>(null);
     const [copiedId, setCopiedId] = useState<number | null>(null);
+    const [selectedType, setSelectedType] = useState("");
 
  
     useEffect(() => {
@@ -109,23 +109,31 @@ export function Dashboard(){
     };
     
 
-      const handleShare = (id: number, link: string) => {
+    const handleShare = (id: number, link: string) => {
         navigator.clipboard.writeText(link); // Copy to clipboard
         setCopiedId(id); // Show "Copied!" message
       
         setTimeout(() => setCopiedId(null), 2000); // gayab after 2s
       };
-  
-    // Convert link to embed code
-    const generateEmbedCode = (link) => {
-        if (link.includes("youtube.com") || link.includes("youtu.be")) {
-          const videoId = link.split("v=")[1]?.split("&")[0] || link.split("/").pop();
+      const generateEmbedCode = (linkOrFile: string, fileType?: string): string => {
+        if (fileType === "image") {
+          return `<img src="${linkOrFile}" alt="Uploaded Image" class="max-w-full h-auto rounded-lg" />`;
+        } else if (fileType === "document") {
+          return `<a href="${linkOrFile}" target="_blank" class="text-blue-600 underline">📄 Open Document</a>`;
+        } else if (linkOrFile.includes("youtube.com") || linkOrFile.includes("youtu.be")) {
+          const videoId = linkOrFile.split("v=")[1]?.split("&")[0] || linkOrFile.split("/").pop();
           return `<iframe width="100%" height="200" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-        } else if (link.includes("twitter.com")) {
-          return `<blockquote class="twitter-tweet"><a href="${link}"></a></blockquote><script async src="https://platform.twitter.com/widgets.js"></script>`;
-        } 
-        // If it's a normal link ( website, document, etc.)
-        return `<a href="${link}" target="_blank" class="text-blue-600 underline">🔗 Open Link</a>`; 
+        } else if (linkOrFile.includes("x.com") || linkOrFile.includes("twitter.com")) {
+          return `<blockquote class="twitter-tweet"><a href="${linkOrFile}"></a></blockquote><script async src="https://platform.twitter.com/widgets.js"></script>`;
+        }
+      
+        // For normal website links
+        return `<a href="${linkOrFile}" target="_blank" class="text-blue-600 underline">🔗 Open Link</a>`;
+      };
+      
+
+      const handleTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedType(e.target.value);
       };
       
 
@@ -135,7 +143,7 @@ export function Dashboard(){
         <div
         className={`fixed top-0 left-0 h-full w-72 bg-white transform transition-transform duration-300 ease-in-out shadow-lg ${ isOpen ? "translate-x-0" : "-translate-x-full" }  `} >
                 <div className="mt-12 md:mt-4 flex flex-col gap-2">
-                        <BarContent startLoglo={<AllNotes/>} indentifier="All Notes" />
+                        <BarContent  startLoglo={<AllNotes/>} indentifier="All Notes" />
                         <BarContent startLoglo={<TweetIcon/>} indentifier="Tweets" />
                         <BarContent startLoglo={<YoutubeIcon/>} indentifier="Youtube" />
                         <BarContent startLoglo={<DocumentIcon/>} indentifier="Documents" />
@@ -170,7 +178,7 @@ export function Dashboard(){
                     <button onClick={() => setShowModal(true)} className="bg-blue-600  hidden lg:block  text-white ml-96 px-4 py-2 rounded">Add Content</button>
                     <button onClick={() => setShowModal(true)} className="bg-blue-600  lg:hidden  text-white ml-72 px-4 py-2 rounded">Add</button>
                     {showModal && (
-                        <div className="fixed inset-0 bg-gray-700 bg-opacity-50 flex justify-center items-center">
+                        <div className="fixed inset-0 bg-gray-900 z-50 bg-opacity-50 flex justify-center items-center">
                         <div className="bg-white p-6 rounded-lg shadow-lg w-96">
                             <div className=" flex justify-between mb-6">
                                 <h2 className="text-xl font-bold ">Add New Content</h2>
@@ -180,9 +188,21 @@ export function Dashboard(){
                                     </button>
                                 </div>
                             </div>
+                            <select
+                              className="w-full p-2 border rounded-md mb-4"
+                              value={selectedType}
+                              onChange={handleTypeChange}
+                            >
+                              <option value="">-- Select Type --</option>
+                              <option value="tweet">Tweet</option>
+                              <option value="youtube">YouTube</option>
+                              <option value="document">Document</option>
+                              <option value="link">Link</option>
+                              <option value="other">Other</option>
+                            </select>
                             <form onSubmit={handleSubmit} className="flex flex-col gap-3 ">
                                 <div className="flex rounded border focus-within:ring-inset focus-within:border-[2px] focus-within:border-blue-900   justiy-between  ">
-                                    <input name="title" maxLength={"18"} placeholder="Title(max 15 char)" value={formData.title} onChange={handleChange} className=" focus:outline-none  pr-28 focus:ring-0 p-2 "/>
+                                    <input name="title"  required maxLength={18} placeholder="Title(max 18 char)" value={formData.title} onChange={handleChange} className=" focus:outline-none  pr-28 focus:ring-0 p-2 "/>
                                     <div className="flex gap-4">
                                     <span
                                         className={` mt-2 text-sm ${

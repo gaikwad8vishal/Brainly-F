@@ -25,6 +25,7 @@ export function Nav(){
 interface BarcontentProps{
     startLoglo : ReactElement;
     indentifier: string;
+
 }
 
 
