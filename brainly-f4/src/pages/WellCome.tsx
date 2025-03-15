@@ -1,5 +1,5 @@
-import { Button2, Button1 } from "../Components/Button";
-import { ExtrawalaCard } from "../Components/extrawalaCard";
+import { Button2, Button1 } from "../components/Button";
+import { ExtrawalaCard } from "../components/extrawalaCard";
 import { BrainIcon } from "../Icons/BrainIcon";
 import { CloudcrackIcon } from "../Icons/CloudcrackIcon";
 import { RightarrowIcon } from "../Icons/RightarrowIcon";

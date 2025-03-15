@@ -10,7 +10,7 @@ import { BrainIcon } from "../Icons/BrainIcon";
 import axios from "axios";
 import { ShareIcon } from "../Icons/ShareIcon";
 import { DeleteIcon } from "../Icons/DeleteIcon"
-import { Sidebar } from "../Components/Nav";
+import { Sidebar } from "../components/Nav";
 import { useNavigate } from "react-router-dom";
 
  
