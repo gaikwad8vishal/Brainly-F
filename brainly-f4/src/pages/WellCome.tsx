@@ -39,7 +39,7 @@ export function WellCome(){
                         </div>
                     </div>
                 </div>
-                <div className="mt-16 rounded-2xl overflow-hidden z-50 border border-gray-200">
+                <div className="mt-16 rounded-2xl overflow-hidden z-50  border border-gray-200">
                 <img src="https://i.imgur.com/2v3tk6s.png" className="w-full"/> 
             </div>
             </div>
