@@ -4,7 +4,7 @@ import './App.css'
 import SignupForm from './pages/signUp'
 import SigninForm from './pages/signIn'
 import { WellCome } from './pages/WellCome'
-import { Dashboard } from './pages/Dashboard'
+import { Dashboard } from './pages/Dashboard.tsx'
 
 function App() {
 
