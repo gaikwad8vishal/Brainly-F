@@ -1,15 +1,13 @@
-import { ReactElement, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { MenuIcon } from "../Icons/menuIcon";
 import { AllNotes } from "../Icons/AllNote";
 import { TweetIcon } from "../Icons/TweetsIcon";
 import { YoutubeIcon } from "../Icons/YoutubIcon";
 import { DocumentIcon } from "../Icons/DocumentsIcon";
 import { LinkIcon } from "../Icons/LinkIcon";
-import { OtherIcon } from "../Icons/OthefileIcon";
 import { CrossIcon } from "../Icons/CrossIcon";
 import { BrainIcon } from "../Icons/BrainIcon";
 import axios from "axios";
-
 import { ShareIcon } from "../Icons/ShareIcon";
 import { DeleteIcon } from "../Icons/DeleteIcon"
 import { Sidebar } from "../Components/Nav";
@@ -17,6 +15,13 @@ import { useNavigate } from "react-router-dom";
 
  
 
+interface Note {
+  id: string;
+  title: string;
+  description: string;
+  link: string;
+  embedCode?: string;
+}
 
 
 
@@ -24,10 +29,10 @@ export function Dashboard(){
 
     
     const [isOpen, setIsOpen] = useState(false);
-    const [notes, setNotes] = useState([]);
+    const [notes, setNotes] = useState<Note[]>([]);
     const [formData, setFormData] = useState({ title: "", description: "", link: "" });
     const [showModal, setShowModal] = useState(false);
-    const [copiedId, setCopiedId] = useState<number | null>(null);
+    const [copiedId, setCopiedId] = useState<string | null>(null);
     const [selectedType, setSelectedType] = useState("");
     const [selectedCategory, setSelectedCategory] = useState("all-notes");
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -44,12 +49,8 @@ export function Dashboard(){
     }, []);
 
     useEffect(() => {
-      //@ts-ignore
-      if (window.twttr) {
-        //@ts-ignore
-        window.twttr.widgets.load();
-      }
-    }, [notes]); // Reload when notes change
+      (window as any).twttr?.widgets?.load();
+    }, [notes]);
     
 
     const fetchUserContent = async () => {
@@ -59,8 +60,8 @@ export function Dashboard(){
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
-        //@ts-ignore
-        setNotes(response.data);
+
+        setNotes(response.data as any);
       } catch (error) {
         console.error("Error fetching user content:", error);
       }
@@ -72,56 +73,72 @@ export function Dashboard(){
     };
 
 
-    const handleSubmit = async (e: any) => {
-        e.preventDefault();
-
-        //to disable submit button
-        if (isSubmitting) return; 
-        setIsSubmitting(true);
-
-
-        if (selectedType !== "other" && !formData.link.trim()) {
-          alert("Please enter a valid link!");
-          return;
-      }
-        if (!formData.title.trim() || !formData.link.trim()) return;
-        
-        const embedCode = generateEmbedCode(formData.link); // Convert to embed code
-        
-        if (["tweet", "youtube", "document", "link"].includes(selectedType) && !formData.link.trim()) {
-          alert("Please provide a valid link for this content type.");
-          return;
-        }
-      
-        if (formData.title.length > 18) {
-          alert("Title should be a maximum of 15 characters!");
-          return;
-        }
-      
-        const newNote = {
-          title: formData.title,
-          description: formData.description.trim(),
-          link: formData.link || null,
-          embedCode
-        };
-      
-        try {
-          const response = await axios.post("http://localhost:3000/content/add", newNote, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`, // Make sure user is authenticated
-            },
-          });
-      
-          //@ts-ignore
-          setNotes([...notes, response.data]); // Update state with newly saved note
-          setFormData({ title: "", description: "", link: "" }); // Reset form
-          setShowModal(false); // Close modal
-        } catch (error) {
-          console.error("Error adding note:", error);
-        }
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+    
+      // Disable submit button while processing
+      if (isSubmitting) return;
+      setIsSubmitting(true);
+    
+      // Input validation
+      if (selectedType !== "other" && !formData.link.trim()) {
+        alert("Please enter a valid link!");
         setIsSubmitting(false);
+        return;
+      }
+    
+      if (!formData.title.trim() || !formData.link.trim()) {
+        alert("Please enter a title and link!");
+        setIsSubmitting(false);
+        return;
+      }
+    
+      if (["tweet", "youtube", "document", "link"].includes(selectedType) && !formData.link.trim()) {
+        alert("Please provide a valid link for this content type.");
+        setIsSubmitting(false);
+        return;
+      }
+    
+      if (formData.title.length > 18) {
+        alert("Title should be a maximum of 18 characters!");
+        setIsSubmitting(false);
+        return;
+      }
+    
+      const embedCode = generateEmbedCode(formData.link);
+    
+      const newNote = {
+        title: formData.title,
+        description: formData.description.trim(),
+        link: formData.link || null,
+        embedCode
       };
-      
+    
+      try {
+        const response = await axios.post<{ id: string; title: string; description?: string; link?: string; embedCode?: string; }>(
+          "http://localhost:3000/content/add",
+          newNote,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+    
+        console.log("Response Data:", response.data);
+    
+        setNotes((prevNotes) => [...prevNotes, response.data as Note]);
+    
+        // Reset form and close modal
+        setFormData({ title: "", description: "", link: "" });
+        setShowModal(false);
+      } catch (error) {
+        console.error("Error adding note:", error);
+      }
+    
+      setIsSubmitting(false);
+    };
+    
       const handleDelete = async (id: string) => {
         const confirmDelete = window.confirm("Are you sure you want to delete this content?");
         if (!confirmDelete) return;
@@ -155,12 +172,20 @@ export function Dashboard(){
       { id: "link", icon: <LinkIcon />, label: "Link", onClick: () => handleCategoryChange("link") },
     ];
     
-
-    const handleShare = (id: number, link: string) => {
-        navigator.clipboard.writeText(link); // Copy to clipboard
-        setCopiedId(id); // Show "Copied!" message
-        setTimeout(() => setCopiedId(null), 2000); // gayab after 2s
-      };
+    const handleShare = (id: string, link?: string) => {
+      if (!link) {
+        console.error("No link available to share");
+        return;
+      }
+    
+      navigator.clipboard.writeText(link)
+        .then(() => setCopiedId(id))
+        .catch((err) => console.error("Failed to copy:", err));
+    
+      // Reset copied state after 2 seconds
+      setTimeout(() => setCopiedId(null), 2000);
+    };
+    
 
 
 
@@ -185,9 +210,7 @@ export function Dashboard(){
       
 
       const filteredNotes = notes.filter((note) => {
-        //@ts-ignore
         if (!note.embedCode || typeof note.embedCode !== "string") return false; // Ensure embedCode exists
-        //@ts-ignore
         const embedCode: string = note.embedCode;
       
         if (selectedCategory === "all-notes") return true;
@@ -325,12 +348,15 @@ export function Dashboard(){
                   <div className="flex justify-between">
                     <h3 className="text-2xl font-bold flex">{note.title}</h3>
                     <div className="flex gap-4 relative">
-                      <button onClick={() => handleShare(note.id, note.link)}>
+                    <button onClick={() => handleShare(note.id, note.link)}>
                         <ShareIcon />
                       </button>
                       {copiedId === note.id && (
-                        <p className="absolute top-8 left-0 bg-green-400 text-black px-3 py-1 rounded text-sm">Copied!</p>
+                        <p className="absolute top-8 left-0 bg-green-400 text-black px-3 py-1 rounded text-sm">
+                          Copied!
+                        </p>
                       )}
+
                       <button onClick={() => handleDelete(note.id)}>
                         <DeleteIcon />
                       </button>
@@ -348,4 +374,3 @@ export function Dashboard(){
     </div> 
 </div>
 }
-
