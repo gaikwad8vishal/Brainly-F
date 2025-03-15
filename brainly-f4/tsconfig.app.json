@@ -20,7 +20,14 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    /* Fix for module resolution */
+    "baseUrl": "./",
+    "paths": {
+      "@pages/*": ["src/pages/*"]
+    },
+    "rootDir": "src"
   },
   "include": ["src"]
 }
