@@ -1,13 +1,13 @@
-import { Button2, Button1 } from "../components/Button";
-import { ExtrawalaCard } from "../components/extrawalaCard";
-import { BrainIcon } from "../Icons/BrainIcon";
-import { CloudcrackIcon } from "../Icons/CloudcrackIcon";
-import { RightarrowIcon } from "../Icons/RightarrowIcon";
-import { SamartAiIcon } from "../Icons/smartAiIcon";
-import { CrackIcon } from "../Icons/SparkIcon";
+import {Button1,Button2} from "@components/Button";
+import { ExtraCard } from "@components/ExtraCard";
+import { BrainIcon } from "@icon/BrainIcon";
+import { CloudcrackIcon } from "@icon/CloudcrackIcon";
+import { RightarrowIcon } from "@icon/RightarrowIcon";
+import { SamartAiIcon } from "@icon/smartAiIcon";
+import { CrackIcon } from "@icon/SparkIcon";
 
 
-export function WellCome(){
+export function Wellcome(){
     return <div>
             <nav className="fixed w-full bg-white/80 backdrop-blur-md z-50 border-b border-gray-100">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,7 +39,7 @@ export function WellCome(){
                         </div>
                     </div>
                 </div>
-                <div className="mt-16 rounded-2xl overflow-hidden z-50  border border-gray-200">
+                <div className="mt-16 rounded-2xl overflow-hidden  border border-gray-200">
                 <img src="https://i.imgur.com/2v3tk6s.png" className="w-full"/> 
             </div>
             </div>
@@ -54,9 +54,9 @@ export function WellCome(){
                         </p>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <ExtrawalaCard TopIcon={<SamartAiIcon/>}  about="Automatically categorize and tag your content for easy retrieval." Heading="Smart Organization" />
-                        <ExtrawalaCard TopIcon={<CloudcrackIcon/>}  about="Find anything in seconds with Embeddings." Heading="Youtube and Twitter" />
-                        <ExtrawalaCard TopIcon={<CrackIcon/>}  about="Save content from anywhere." Heading="Save Anything" />
+                        <ExtraCard TopIcon={<SamartAiIcon/>}  about="Automatically categorize and tag your content for easy retrieval." Heading="Smart Organization" />
+                        <ExtraCard TopIcon={<CloudcrackIcon/>}  about="Find anything in seconds with Embeddings." Heading="Youtube and Twitter" />
+                        <ExtraCard TopIcon={<CrackIcon/>}  about="Save content from anywhere." Heading="Save Anything" />
                     </div>
                 </div>
             </div>

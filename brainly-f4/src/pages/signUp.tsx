@@ -1,9 +1,9 @@
 import { JSX, useState } from "react";
 import axios from "axios";
-import { BrainIcon } from "../Icons/BrainIcon";
-import { UserIcon } from "../Icons/UserIcon";
-import { RightarrowIcon } from "../Icons/RightarrowIcon";
-import { LockIcon } from "../Icons/lockIcon";
+import { BrainIcon } from "../icon/BrainIcon";
+import { UserIcon } from "../icon/UserIcon";
+import { RightarrowIcon } from "../icon/RightarrowIcon";
+import { LockIcon } from "../icon/lockIcon";
 import { useNavigate } from "react-router-dom";
 
 const SignupForm = ():JSX.Element => {

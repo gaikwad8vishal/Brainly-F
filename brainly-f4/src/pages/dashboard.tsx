@@ -1,15 +1,15 @@
 import { useState, useEffect } from "react";
-import { MenuIcon } from "../Icons/menuIcon";
-import { AllNotes } from "../Icons/AllNote";
-import { TweetIcon } from "../Icons/TweetsIcon";
-import { YoutubeIcon } from "../Icons/YoutubIcon";
-import { DocumentIcon } from "../Icons/DocumentsIcon";
-import { LinkIcon } from "../Icons/LinkIcon";
-import { CrossIcon } from "../Icons/CrossIcon";
-import { BrainIcon } from "../Icons/BrainIcon";
+import { MenuIcon } from "../icon/menuIcon";
+import { AllNotes } from "../icon/AllNote";
+import { TweetIcon } from "../icon/TweetsIcon";
+import { YoutubeIcon } from "../icon/YoutubIcon";
+import { DocumentIcon } from "../icon/DocumentsIcon";
+import { LinkIcon } from "../icon/LinkIcon";
+import { CrossIcon } from "../icon/CrossIcon";
+import { BrainIcon } from "../icon/BrainIcon";
 import axios from "axios";
-import { ShareIcon } from "../Icons/ShareIcon";
-import { DeleteIcon } from "../Icons/DeleteIcon"
+import { ShareIcon } from "../icon/ShareIcon";
+import { DeleteIcon } from "../icon/DeleteIcon"
 import { Sidebar } from "../components/Nav";
 import { useNavigate } from "react-router-dom";
 

@@ -25,7 +25,9 @@
     /* Fix for module resolution */
     "baseUrl": "./",
     "paths": {
-      "@pages/*": ["src/pages/*"]
+      "@pages/*": ["src/pages/*"],
+      "@components/*": ["src/components/*"],
+      "@icon/*": ["src/icon/*"]
     },
     "rootDir": "src"
   },

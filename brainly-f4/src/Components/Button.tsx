@@ -1,10 +1,5 @@
 import { JSX, ReactElement } from "react"
 
-
-
-
-
-
 export function Button1(){
 
     return <a href="/signin" data-discover="true">
