@@ -11,11 +11,15 @@ const SigninForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+
   const navigate = useNavigate();
 
   const handleSignin = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(""); // Clear previous messages
+    setIsLoading(true);
 
     try {
       const response = await axios.post("http://localhost:3000/api/signin", {
@@ -32,11 +36,12 @@ const SigninForm = () => {
       setPassword("");
     } catch (error: any) {
       setMessage(error.response?.data?.error || "Signin failed");
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-200 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
           <div className="sm:mx-auto sm:w-full sm:max-w-md">
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
               <a className="flex items-center justify-center gap-2 mb-8" href="/" data-discover="true"> 
@@ -45,7 +50,7 @@ const SigninForm = () => {
               </a>
               <h2 className="text-center text-3xl font-bold tracking-tight text-gray-900">Sign in to your account</h2>
               <p className="mt-2 text-center text-sm text-gray-600" >Or 
-                <a className="font-medium text-indigo-600 hover:text-indigo-500" data-discover="true" href="/signup"> create a new account</a>
+                <a className="font-medium text-purple-600 hover:text-purple-800" data-discover="true" href="/signup"> create a new account</a>
               </p>
             </div>
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -84,10 +89,16 @@ const SigninForm = () => {
                     </div>
                   </div>
                   <div>
-                    <button type="submit" className="w-full flex justify-center items-center gap-2 py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                      Sign in
-                      <RightarrowIcon/>
-                    </button>
+                  <button 
+                    type="submit" 
+                    disabled={isLoading} // Disable button when loading
+                    className={`w-full flex justify-center items-center gap-2 py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white ${
+                      isLoading ? "bg-gray-400 cursor-not-allowed" : "bg-purple-600 hover:bg-purple-800"
+                    } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-800`}
+                  >
+                    {isLoading ? "Signing in..." : "Sign in"}
+                    <RightarrowIcon/>
+                  </button>
                   </div>
                 </form>
               </div>

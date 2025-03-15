@@ -29,7 +29,7 @@ export function WellCome(){
                     <div className="text-center">
                         <h1 className="text-5xl font-bold text-gray-900 mb-6">
                             Your Digital Second Brain for
-                            <span className="text-indigo-600"> Everything</span>
+                            <span className="text-purple-600"> Everything</span>
                         </h1>
                         <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto"> 
                         Capture, organize, and never lose your valuable content. From tweets to documents, everything in one place.
@@ -39,8 +39,8 @@ export function WellCome(){
                         </div>
                     </div>
                 </div>
-                <div className="mt-16 rounded-2xl overflow-hidden shadow-2xl border border-gray-200">
-                <img src="/assets/Dashboarddemo-KgAoZpp3.png" className="w-full"/> 
+                <div className="mt-16 rounded-2xl overflow-hidden z-50 border border-gray-200">
+                <img src="https://i.imgur.com/2v3tk6s.png" className="w-full"/> 
             </div>
             </div>
             <div className="py-20 bg-gray-50">
@@ -62,7 +62,7 @@ export function WellCome(){
             </div>
             <div className="py-20">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className="bg-indigo-600 rounded-2xl p-12 text-center">
+                    <div className="bg-purple-600 rounded-2xl p-12 text-center">
                         <h2 className="text-3xl font-bold text-white mb-4">
                             Ready to organize your digital life?
                         </h2>  
