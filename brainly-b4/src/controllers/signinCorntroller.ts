@@ -8,8 +8,11 @@ export const signin = async (req: Request, res: Response) => {
   try {
     const { username, password } = req.body;
 
+    //neccessary
     if (!username || !password) {
-      return res.status(400).json({ error: "Username and Password are required" });
+      return res.status(400).json({ 
+        error: "Username and Password are required" 
+      });
     }
 
     // Find user in database (use findFirst if username is not unique)

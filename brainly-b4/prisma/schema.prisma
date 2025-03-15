@@ -26,6 +26,9 @@ datasource db {
   description String?
   embedCode   String?
   link        String
+  filePath  String?   // Store file path if it's an uploaded file
+  fileType  String?   // 'image', 'document', or null for links
+  createdAt DateTime @default(now())  
   userId      String  // Connected to User
   user        User    @relation(fields: [userId], references: [id])
 }

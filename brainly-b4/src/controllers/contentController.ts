@@ -3,8 +3,9 @@ import prisma from "../models/User";
 
 export const addContent = async (req: Request, res: Response) => {
   try {
-    const { title, description, embedCode, link } = req.body;
-
+    const { title, description, embedCode, link , filePath,
+      fileType, } = req.body;
+      
     
     const userId = (req as any).userId; // Auth middleware se milna chahiye
 
@@ -17,6 +18,8 @@ export const addContent = async (req: Request, res: Response) => {
         title,
         description,
         embedCode,
+        filePath,
+        fileType,
         link,
         user: { connect: { id: userId } }, // Yaha pe user connect karna hai
       },
