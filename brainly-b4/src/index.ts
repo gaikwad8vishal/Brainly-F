@@ -10,7 +10,7 @@ app.use(express.json());
 
 app.use(
     cors({
-      origin: "http://localhost:5173", // Frontend ka URL
+      origin: "https://brainly-f4-2z6nqjugf-vishal-gaikwads-projects.vercel.app", // Frontend ka URL
       methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP Methods
       allowedHeaders: ["Content-Type", "Authorization"], // Custom Headers
       credentials: true, // Cookies Allow Karne Ke Liye
